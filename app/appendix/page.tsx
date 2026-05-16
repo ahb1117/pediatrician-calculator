@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { calcAppendix, type AppendixResult } from "@/lib/calculations";
-import Attribution from "@/components/Attribution";
+import CalcShell from "@/components/CalcShell";
 
 interface Fluid {
   dextrose: number;
@@ -48,81 +47,84 @@ export default function AppendixPage() {
     markDirty();
   }
 
-  const inputClass = "w-full rounded border border-slate-300 px-2 py-1.5 text-sm font-mono focus:border-teal-500 focus:ring-1 focus:ring-teal-200 outline-none";
-
   return (
-    <div className="max-w-4xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/" className="text-blue-600 hover:underline text-sm">← Home</Link>
-        <span className="text-slate-400">/</span>
-        <span className="text-sm text-slate-600">Appendix Calculator</span>
-      </div>
-
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Appendix — BSA, BMI, GIR &amp; eGFR Calculator</h1>
-      <p className="text-sm text-slate-500 mb-6">Fill in all relevant data then click Calculate.</p>
-
+    <CalcShell
+      sigil="📐"
+      title="Appendix — BSA, BMI, GIR &amp; eGFR"
+      description="Fill in all relevant data then click Calculate."
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* BSA & BMI inputs */}
-        <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-          <h2 className="text-base font-semibold text-teal-700 border-b border-teal-100 pb-2 mb-4">BSA &amp; BMI</h2>
+        <section className="np-card">
+          <h2 className="np-section-heading" style={{ color: "var(--np-primary)", borderColor: "var(--np-primary-soft)" }}>
+            BSA &amp; BMI
+          </h2>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Weight (kg)</label>
+              <label className="np-label">Weight (kg)</label>
               <input type="number" step="0.1" value={weight} placeholder="e.g. 15"
-                onChange={e => { setWeight(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setWeight(e.target.value); markDirty(); }} className="np-input" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Height (cm)</label>
+              <label className="np-label">Height (cm)</label>
               <input type="number" step="0.5" value={height} placeholder="e.g. 105"
-                onChange={e => { setHeight(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setHeight(e.target.value); markDirty(); }} className="np-input" />
             </div>
           </div>
         </section>
 
         {/* eGFR inputs */}
-        <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-          <h2 className="text-base font-semibold text-teal-700 border-b border-teal-100 pb-2 mb-4">eGFR (Revised Schwartz)</h2>
+        <section className="np-card">
+          <h2 className="np-section-heading" style={{ color: "var(--np-primary)", borderColor: "var(--np-primary-soft)" }}>
+            eGFR (Revised Schwartz)
+          </h2>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Patient Length / Height (cm)</label>
+              <label className="np-label">Patient Length / Height (cm)</label>
               <input type="number" step="0.5" value={length} placeholder="e.g. 35"
-                onChange={e => { setLength(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setLength(e.target.value); markDirty(); }} className="np-input" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Serum Creatinine (μmol/L)</label>
+              <label className="np-label">Serum Creatinine (μmol/L)</label>
               <input type="number" step="1" value={creatinine} placeholder="e.g. 56"
-                onChange={e => { setCreatinine(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setCreatinine(e.target.value); markDirty(); }} className="np-input" />
             </div>
           </div>
         </section>
 
         {/* GIR fluids */}
-        <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm lg:col-span-2">
-          <h2 className="text-base font-semibold text-teal-700 border-b border-teal-100 pb-2 mb-4">GIR — Glucose Infusion Rate</h2>
-          <p className="text-xs text-slate-500 mb-3">Put 0 for unused slots (e.g. if NPO, keep feeding fields at 0).</p>
+        <section className="np-card lg:col-span-2">
+          <h2 className="np-section-heading" style={{ color: "var(--np-primary)", borderColor: "var(--np-primary-soft)" }}>
+            GIR — Glucose Infusion Rate
+          </h2>
+          <p style={{ fontSize: 12, color: "var(--np-fg-3)", marginBottom: 12 }}>
+            Put 0 for unused slots (e.g. if NPO, keep feeding fields at 0).
+          </p>
           <div className="mb-4 overflow-x-auto">
-            <div className="text-xs font-semibold text-slate-600 mb-2">IV Fluids</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--np-fg-2)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+              IV Fluids
+            </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50">
-                  <th className="text-left text-xs text-slate-500 font-medium px-2 py-1">Fluid</th>
-                  <th className="text-left text-xs text-slate-500 font-medium px-2 py-1">Dextrose %</th>
-                  <th className="text-left text-xs text-slate-500 font-medium px-2 py-1">Rate (mL/hr)</th>
+                <tr style={{ background: "var(--np-surface-sunken)" }}>
+                  <th className="text-left px-2 py-1" style={{ fontSize: 11, color: "var(--np-fg-3)", fontWeight: 600 }}>Fluid</th>
+                  <th className="text-left px-2 py-1" style={{ fontSize: 11, color: "var(--np-fg-3)", fontWeight: 600 }}>Dextrose %</th>
+                  <th className="text-left px-2 py-1" style={{ fontSize: 11, color: "var(--np-fg-3)", fontWeight: 600 }}>Rate (mL/hr)</th>
                 </tr>
               </thead>
               <tbody>
                 {fluids.map((f, i) => (
-                  <tr key={i} className="border-b border-slate-100">
-                    <td className="px-2 py-1.5 text-xs text-slate-500">Fluid {i + 1}</td>
+                  <tr key={i} style={{ borderBottom: "1px solid var(--np-border)" }}>
+                    <td className="px-2 py-1.5" style={{ fontSize: 12, color: "var(--np-fg-3)" }}>Fluid {i + 1}</td>
                     <td className="px-2 py-1.5">
                       <input type="number" min="0" step="0.5" value={f.dextrose}
                         onChange={(e) => updateFluid(i, "dextrose", e.target.value)}
-                        className="w-24 rounded border border-slate-300 px-2 py-1 text-xs font-mono focus:border-teal-500 outline-none" />
+                        style={{ width: 96, borderRadius: 8, border: "1px solid var(--np-border-strong)", padding: "5px 10px", fontSize: 13, fontFamily: "var(--np-font-mono)", outline: "none", background: "var(--np-surface)" }} />
                     </td>
                     <td className="px-2 py-1.5">
                       <input type="number" min="0" step="0.1" value={f.rate}
                         onChange={(e) => updateFluid(i, "rate", e.target.value)}
-                        className="w-24 rounded border border-slate-300 px-2 py-1 text-xs font-mono focus:border-teal-500 outline-none" />
+                        style={{ width: 96, borderRadius: 8, border: "1px solid var(--np-border-strong)", padding: "5px 10px", fontSize: 13, fontFamily: "var(--np-font-mono)", outline: "none", background: "var(--np-surface)" }} />
                     </td>
                   </tr>
                 ))}
@@ -130,108 +132,105 @@ export default function AppendixPage() {
             </table>
           </div>
           <div>
-            <div className="text-xs font-semibold text-slate-600 mb-2">Enteral Feeding</div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "var(--np-fg-2)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+              Enteral Feeding
+            </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Glucose content (g/dL)</label>
+                <label className="np-label">Glucose content (g/dL)</label>
                 <input type="number" min="0" step="0.1" value={feedingGlucose}
-                  onChange={e => { setFeedingGlucose(e.target.value); markDirty(); }} className={inputClass} />
-                <div className="text-xs text-slate-400 mt-0.5">EBM: 7.1 | Term: 7.1 | Preterm: 8.5</div>
+                  onChange={e => { setFeedingGlucose(e.target.value); markDirty(); }} className="np-input" />
+                <div style={{ fontSize: 11, color: "var(--np-fg-4)", marginTop: 3 }}>EBM: 7.1 | Term: 7.1 | Preterm: 8.5</div>
               </div>
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Amount (mL/feed)</label>
+                <label className="np-label">Amount (mL/feed)</label>
                 <input type="number" min="0" step="1" value={feedingAmount}
-                  onChange={e => { setFeedingAmount(e.target.value); markDirty(); }} className={inputClass} />
+                  onChange={e => { setFeedingAmount(e.target.value); markDirty(); }} className="np-input" />
               </div>
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Frequency (every N hours)</label>
+                <label className="np-label">Frequency (every N hours)</label>
                 <input type="number" min="0" step="0.5" value={feedingFrequency}
-                  onChange={e => { setFeedingFrequency(e.target.value); markDirty(); }} className={inputClass} />
+                  onChange={e => { setFeedingFrequency(e.target.value); markDirty(); }} className="np-input" />
               </div>
             </div>
           </div>
         </section>
       </div>
 
-      {/* Calculate button */}
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={handleCalculate}
           disabled={!weight || parseFloat(weight) <= 0}
-          className="px-8 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-sm transition-colors"
+          className="np-btn np-btn-primary"
         >
           {result && !dirty ? "Recalculate" : "Calculate"}
         </button>
-        {result && dirty && (
-          <span className="text-xs text-amber-600 font-medium">⚠ Inputs changed — click Recalculate</span>
-        )}
+        {result && dirty && <span className="np-dirty-warn">⚠ Inputs changed — click Recalculate</span>}
       </div>
 
       {!result && (
-        <div className="bg-slate-100 border border-slate-200 rounded-xl p-12 text-center text-slate-400">
-          Fill in the data above and click <strong className="text-slate-600">Calculate</strong> to see results.
+        <div className="np-empty">
+          Fill in the data above and click <strong>Calculate</strong> to see results.
         </div>
       )}
 
       {result && !dirty && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* BSA & BMI results */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-teal-700 border-b border-teal-100 pb-2 mb-4">BSA &amp; BMI Results</h2>
+          <div className="np-card">
+            <h2 className="np-section-heading" style={{ color: "var(--np-primary)", borderColor: "var(--np-primary-soft)" }}>BSA &amp; BMI Results</h2>
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-center">
-                <div className="text-xs text-teal-600 font-medium">BSA</div>
-                <div className="text-3xl font-bold text-teal-800">{result.bsa}</div>
-                <div className="text-xs text-teal-600">m²</div>
-              </div>
-              <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-center">
-                <div className="text-xs text-teal-600 font-medium">BMI</div>
-                <div className="text-3xl font-bold text-teal-800">{result.bmi}</div>
-                <div className="text-xs text-teal-600">kg/m²</div>
-              </div>
+              {[
+                { label: "BSA", val: result.bsa, unit: "m²" },
+                { label: "BMI", val: result.bmi, unit: "kg/m²" },
+              ].map(({ label, val, unit }) => (
+                <div key={label} className="rounded-lg p-3 text-center" style={{ background: "var(--np-primary-soft)", border: "1px solid #A5D3D8" }}>
+                  <div style={{ fontSize: 11, color: "var(--np-primary)", fontWeight: 600 }}>{label}</div>
+                  <div className="np-value" style={{ fontSize: 28, color: "var(--np-secondary)" }}>{val}</div>
+                  <div style={{ fontSize: 11, color: "var(--np-primary)" }}>{unit}</div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* eGFR results */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-teal-700 border-b border-teal-100 pb-2 mb-4">eGFR Results</h2>
-            <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="np-card">
+            <h2 className="np-section-heading" style={{ color: "var(--np-primary)", borderColor: "var(--np-primary-soft)" }}>eGFR Results</h2>
+            <div className="grid grid-cols-2 gap-2" style={{ fontSize: 12 }}>
               {[
                 { label: "Pre-term (0–12 mo)", val: result.egfr_preterm },
                 { label: "Full-term (0–12 mo)", val: result.egfr_fullterm },
                 { label: "Child (1–12 yr)", val: result.egfr_child },
                 { label: "Adolescent (12–17 yr)", val: result.egfr_adolescent },
               ].map(({ label, val }) => (
-                <div key={label} className="bg-teal-50 border border-teal-200 rounded-lg p-2 text-center">
-                  <div className="text-teal-600">{label}</div>
-                  <div className="font-bold text-teal-800 text-base">{val}</div>
-                  <div className="text-teal-600">mL/min/1.73m²</div>
+                <div key={label} className="rounded-lg p-2 text-center" style={{ background: "var(--np-primary-soft)", border: "1px solid #A5D3D8" }}>
+                  <div style={{ color: "var(--np-primary)" }}>{label}</div>
+                  <div style={{ fontFamily: "var(--np-font-mono)", fontWeight: 700, fontSize: 15, color: "var(--np-secondary)" }}>{val}</div>
+                  <div style={{ color: "var(--np-primary)", fontSize: 10 }}>mL/min/1.73m²</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* GIR results */}
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm lg:col-span-2">
-            <h2 className="text-base font-semibold text-teal-700 border-b border-teal-100 pb-2 mb-4">GIR Results</h2>
+          <div className="np-card lg:col-span-2">
+            <h2 className="np-section-heading" style={{ color: "var(--np-primary)", borderColor: "var(--np-primary-soft)" }}>GIR Results</h2>
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: "Fluids GIR", val: result.fluidsGIR },
-                { label: "Feeding GIR", val: result.feedingGIR },
-                { label: "Total GIR", val: result.totalGIR },
-              ].map(({ label, val }) => (
-                <div key={label} className={`rounded-lg p-4 text-center border ${label === "Total GIR" ? "bg-teal-100 border-teal-300" : "bg-teal-50 border-teal-200"}`}>
-                  <div className="text-xs text-teal-700 font-medium">{label}</div>
-                  <div className="text-3xl font-bold text-teal-800">{val}</div>
-                  <div className="text-xs text-teal-600">mg/kg/min</div>
+                { label: "Fluids GIR", val: result.fluidsGIR, highlight: false },
+                { label: "Feeding GIR", val: result.feedingGIR, highlight: false },
+                { label: "Total GIR", val: result.totalGIR, highlight: true },
+              ].map(({ label, val, highlight }) => (
+                <div key={label} className="rounded-lg p-4 text-center border" style={{
+                  background: highlight ? "#B3D9DD" : "var(--np-primary-soft)",
+                  borderColor: highlight ? "#7CB3B9" : "#A5D3D8",
+                }}>
+                  <div style={{ fontSize: 12, color: "var(--np-primary)", fontWeight: 600 }}>{label}</div>
+                  <div className="np-value" style={{ fontSize: 28, color: "var(--np-secondary)" }}>{val}</div>
+                  <div style={{ fontSize: 11, color: "var(--np-primary)" }}>mg/kg/min</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       )}
-
-      <Attribution />
-    </div>
+    </CalcShell>
   );
 }

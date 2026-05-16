@@ -1,25 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { COMPATIBILITY_DATA, type CompatibilityStatus } from "@/lib/calculations";
-import Attribution from "@/components/Attribution";
+import CalcShell from "@/components/CalcShell";
 
-const STATUS_CONFIG: Record<CompatibilityStatus, { label: string; bg: string; text: string }> = {
-  C: { label: "Compatible", bg: "bg-green-100", text: "text-green-800" },
-  I: { label: "Incompatible", bg: "bg-red-100", text: "text-red-800" },
-  NT: { label: "Not Tested", bg: "bg-slate-100", text: "text-slate-500" },
-  V: { label: "Variable", bg: "bg-yellow-100", text: "text-yellow-800" },
+const STATUS_CONFIG: Record<CompatibilityStatus, { label: string; bg: string; text: string; border: string }> = {
+  C:  { label: "Compatible",   bg: "var(--np-success-soft)", text: "var(--np-success)", border: "#86EFAC" },
+  I:  { label: "Incompatible", bg: "var(--np-danger-soft)",  text: "var(--np-danger)",  border: "#FCA5A5" },
+  NT: { label: "Not Tested",   bg: "var(--np-surface-sunken)", text: "var(--np-fg-4)", border: "var(--np-border)" },
+  V:  { label: "Variable",     bg: "var(--np-warning-soft)", text: "var(--np-warning)", border: "#FDE68A" },
 };
 
 const SOLUTIONS = ["NS", "D5W", "D10W", "D5NS", "D5halfNS", "LR"] as const;
 const SOLUTION_LABELS: Record<string, string> = {
-  NS: "NS",
-  D5W: "D5W",
-  D10W: "D10W",
-  D5NS: "D5NS",
-  D5halfNS: "D5½NS",
-  LR: "LR",
+  NS: "NS", D5W: "D5W", D10W: "D10W", D5NS: "D5NS", D5halfNS: "D5½NS", LR: "LR",
 };
 
 export default function SolutionCompatibilityPage() {
@@ -35,23 +29,21 @@ export default function SolutionCompatibilityPage() {
   const StatusCell = ({ status }: { status: CompatibilityStatus }) => {
     const cfg = STATUS_CONFIG[status];
     return (
-      <td className={`border border-slate-200 px-2 py-2 text-center text-xs font-medium rounded-sm ${cfg.bg} ${cfg.text}`}>
+      <td style={{
+        padding: "8px 10px", textAlign: "center", fontSize: 12, fontWeight: 600,
+        background: cfg.bg, color: cfg.text, border: "1px solid var(--np-border)",
+      }}>
         {status === "NT" ? "NT" : status}
       </td>
     );
   };
 
   return (
-    <div className="max-w-5xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/" className="text-blue-600 hover:underline text-sm">← Home</Link>
-        <span className="text-slate-400">/</span>
-        <span className="text-sm text-slate-600">Solution Compatibility</span>
-      </div>
-
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Medications Solution Compatibility</h1>
-      <p className="text-sm text-slate-500 mb-6">IV solution compatibility reference for PICU medications.</p>
-
+    <CalcShell
+      sigil="🧬"
+      title="Solution Compatibility"
+      description="IV solution compatibility reference for 33 PICU medications."
+    >
       {/* Legend */}
       <div className="flex flex-wrap gap-3 mb-5">
         {(Object.entries(STATUS_CONFIG) as [CompatibilityStatus, typeof STATUS_CONFIG[CompatibilityStatus]][]).map(
@@ -59,17 +51,24 @@ export default function SolutionCompatibilityPage() {
             <button
               key={key}
               onClick={() => setFilterStatus(filterStatus === key ? "" : key)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border-2 transition-all ${
-                filterStatus === key ? "border-slate-400 shadow-sm" : "border-transparent"
-              } ${cfg.bg} ${cfg.text}`}
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "6px 14px", borderRadius: 999, fontSize: 12, fontWeight: 600,
+                background: cfg.bg, color: cfg.text,
+                border: `2px solid ${filterStatus === key ? cfg.border : "transparent"}`,
+                cursor: "pointer",
+                fontFamily: "var(--np-font-body)",
+                transition: "border-color 120ms",
+              }}
             >
-              <span className="font-bold">{key}</span>
+              <span style={{ fontWeight: 700 }}>{key}</span>
               <span>{cfg.label}</span>
             </button>
           )
         )}
         {filterStatus && (
-          <button onClick={() => setFilterStatus("")} className="text-xs text-slate-500 underline">
+          <button onClick={() => setFilterStatus("")}
+            style={{ fontSize: 12, color: "var(--np-primary)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
             Clear filter
           </button>
         )}
@@ -81,22 +80,27 @@ export default function SolutionCompatibilityPage() {
           placeholder="Search medication..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-64 rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+          className="np-input" style={{ maxWidth: 256, fontFamily: "var(--np-font-body)" }}
         />
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
-        <table className="w-full text-sm border-collapse bg-white">
+      <div className="overflow-x-auto rounded-xl border shadow-sm" style={{ borderColor: "var(--np-border)" }}>
+        <table className="w-full text-sm border-collapse" style={{ background: "var(--np-surface)" }}>
           <thead>
-            <tr className="bg-slate-50">
-              <th className="border-b border-slate-200 px-4 py-3 text-left text-xs font-semibold text-slate-700">
+            <tr style={{ background: "var(--np-surface-sunken)" }}>
+              <th style={{
+                borderBottom: "1px solid var(--np-border)", padding: "12px 16px",
+                textAlign: "left", fontSize: 11, fontWeight: 700,
+                color: "var(--np-fg-2)", letterSpacing: "0.06em", textTransform: "uppercase",
+              }}>
                 Medication
               </th>
               {SOLUTIONS.map((s) => (
-                <th
-                  key={s}
-                  className="border-b border-slate-200 px-3 py-3 text-center text-xs font-semibold text-slate-700"
-                >
+                <th key={s} style={{
+                  borderBottom: "1px solid var(--np-border)", padding: "12px 12px",
+                  textAlign: "center", fontSize: 11, fontWeight: 700,
+                  color: "var(--np-fg-2)", letterSpacing: "0.06em", textTransform: "uppercase",
+                }}>
                   {SOLUTION_LABELS[s]}
                 </th>
               ))}
@@ -104,8 +108,12 @@ export default function SolutionCompatibilityPage() {
           </thead>
           <tbody>
             {filtered.map((entry, i) => (
-              <tr key={entry.drug} className={i % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
-                <td className="border-b border-slate-100 px-4 py-2.5 text-sm font-medium text-slate-800">
+              <tr key={entry.drug} style={{ background: i % 2 === 0 ? "var(--np-surface)" : "var(--np-surface-sunken)" }}>
+                <td style={{
+                  borderBottom: "1px solid var(--np-border)", padding: "10px 16px",
+                  fontSize: 13, fontWeight: 500, color: "var(--np-fg-1)",
+                  fontFamily: "var(--np-font-body)",
+                }}>
                   {entry.drug}
                 </td>
                 {SOLUTIONS.map((s) => (
@@ -118,15 +126,13 @@ export default function SolutionCompatibilityPage() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-10 text-slate-400">No medications match your search.</div>
+        <div className="np-empty mt-4">No medications match your search.</div>
       )}
 
-      <div className="mt-4 text-xs text-slate-500">
+      <div style={{ marginTop: 12, fontSize: 12, color: "var(--np-fg-3)" }}>
         {filtered.length} of {COMPATIBILITY_DATA.length} medications shown.
         Click a legend item to filter by compatibility status.
       </div>
-
-      <Attribution />
-    </div>
+    </CalcShell>
   );
 }

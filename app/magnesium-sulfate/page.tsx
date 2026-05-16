@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { calcMagnesium, type MagnesiumResult } from "@/lib/calculations";
-import Attribution from "@/components/Attribution";
+import CalcShell from "@/components/CalcShell";
 
 export default function MagnesiumSulfatePage() {
   const [weight, setWeight] = useState<string>("");
@@ -31,50 +30,41 @@ export default function MagnesiumSulfatePage() {
   const hasResults = hypomagResult || asthmaResult;
 
   return (
-    <div className="max-w-3xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/" className="text-blue-600 hover:underline text-sm">← Home</Link>
-        <span className="text-slate-400">/</span>
-        <span className="text-sm text-slate-600">Magnesium Sulfate</span>
-      </div>
-
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Magnesium Sulfate</h1>
-      <p className="text-sm text-slate-500 mb-6">Enter patient data then click Calculate. Max dose = 2000 mg/dose.</p>
-
+    <CalcShell
+      sigil="⚗️"
+      title="Magnesium Sulfate"
+      description="Enter patient data then click Calculate. Max dose = 2000 mg/dose."
+    >
       {/* Inputs */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6 shadow-sm space-y-4">
+      <div className="np-card mb-6 space-y-4">
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-1">Patient Weight (kg)</label>
+          <label className="np-label">Patient Weight (kg)</label>
           <input
             type="number" min="0.5" max="200" step="0.1"
             value={weight}
             onChange={(e) => { setWeight(e.target.value); markDirty(); }}
             onKeyDown={(e) => e.key === "Enter" && handleCalculate()}
-            className="w-40 rounded-md border border-slate-300 px-3 py-2 text-base font-mono shadow-sm focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+            className="np-input" style={{ maxWidth: 160 }}
             placeholder="e.g. 15"
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Hypomagnesemia dose (mg/kg) — range 25–50
-            </label>
+            <label className="np-label">Hypomagnesemia dose (mg/kg) — range 25–50</label>
             <input
               type="number" min="25" max="50" step="1"
               value={hypomagDose}
               onChange={(e) => { setHypomagDose(e.target.value); markDirty(); }}
-              className="w-32 rounded-md border border-slate-300 px-3 py-2 text-sm font-mono focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="np-input" style={{ maxWidth: 130 }}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Asthma exacerbation dose (mg/kg) — range 25–75
-            </label>
+            <label className="np-label">Asthma exacerbation dose (mg/kg) — range 25–75</label>
             <input
               type="number" min="25" max="75" step="1"
               value={asthmaDose}
               onChange={(e) => { setAsthmaDose(e.target.value); markDirty(); }}
-              className="w-32 rounded-md border border-slate-300 px-3 py-2 text-sm font-mono focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
+              className="np-input" style={{ maxWidth: 130 }}
             />
           </div>
         </div>
@@ -82,88 +72,81 @@ export default function MagnesiumSulfatePage() {
           <button
             onClick={handleCalculate}
             disabled={!weight || parseFloat(weight) <= 0}
-            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-sm transition-colors"
+            className="np-btn np-btn-primary"
           >
             {hasResults && !dirty ? "Recalculate" : "Calculate"}
           </button>
-          {hasResults && dirty && (
-            <span className="text-xs text-amber-600 font-medium">⚠ Inputs changed — click Recalculate</span>
-          )}
+          {hasResults && dirty && <span className="np-dirty-warn">⚠ Inputs changed — click Recalculate</span>}
           {calculatedWeight && !dirty && (
-            <span className="text-xs text-slate-500">Results for {calculatedWeight} kg</span>
+            <span style={{ fontSize: 12, color: "var(--np-fg-3)" }}>Results for {calculatedWeight} kg</span>
           )}
         </div>
       </div>
 
       {/* Results */}
       {!hasResults && (
-        <div className="bg-slate-100 border border-slate-200 rounded-xl p-12 text-center text-slate-400">
-          Enter patient data above and click <strong className="text-slate-600">Calculate</strong> to see orders.
+        <div className="np-empty">
+          Enter patient data above and click <strong>Calculate</strong> to see orders.
         </div>
       )}
 
       {hasResults && !dirty && (
         <div className="space-y-6">
-
           {hypomagResult && (
-            <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-semibold text-purple-700 border-b border-purple-100 pb-2 mb-4">
+            <section className="np-card">
+              <h2 className="np-section-heading" style={{ color: "#7C3AED", borderColor: "#EDE9FE" }}>
                 Order For Hypomagnesemia
               </h2>
               <div className="space-y-3">
-                <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 font-mono text-sm">
-                  <div className="font-semibold text-purple-800 mb-2">Order for Neonates (every 8–12 hours):</div>
-                  <p className="text-slate-700">
+                <div className="rounded-lg border p-4" style={{ background: "#FAF5FF", borderColor: "#DDD6FE", fontFamily: "var(--np-font-mono)", fontSize: 13 }}>
+                  <div style={{ fontWeight: 600, color: "#6D28D9", marginBottom: 8 }}>Order for Neonates (every 8–12 hours):</div>
+                  <p style={{ color: "var(--np-fg-1)" }}>
                     Give MgSO₄ <strong>{hypomagResult.totalDose.toFixed(0)} mg</strong> diluted in{" "}
                     <strong>{hypomagResult.minDilution} – {hypomagResult.maxDilution} mL</strong> of chosen fluid
                     (e.g. NS, D5W) IV infusion over <strong>{hypomagResult.infusionHours} hour{hypomagResult.infusionHours !== 1 ? "s" : ""}</strong> under CPM.
                   </p>
                 </div>
-                <div className="bg-purple-50 border border-purple-100 rounded-lg p-4 font-mono text-sm">
-                  <div className="font-semibold text-purple-800 mb-2">Order for Older Patients (every 6 hours):</div>
-                  <p className="text-slate-700">
+                <div className="rounded-lg border p-4" style={{ background: "#FAF5FF", borderColor: "#DDD6FE", fontFamily: "var(--np-font-mono)", fontSize: 13 }}>
+                  <div style={{ fontWeight: 600, color: "#6D28D9", marginBottom: 8 }}>Order for Older Patients (every 6 hours):</div>
+                  <p style={{ color: "var(--np-fg-1)" }}>
                     Give MgSO₄ <strong>{hypomagResult.totalDose.toFixed(0)} mg</strong> diluted in{" "}
                     <strong>{hypomagResult.minDilution} – {hypomagResult.maxDilution} mL</strong> of chosen fluid
                     (e.g. NS, D5W) IV infusion over <strong>{hypomagResult.infusionHours} hour{hypomagResult.infusionHours !== 1 ? "s" : ""}</strong> under CPM.
                   </p>
                 </div>
                 <div className="grid grid-cols-3 gap-3 mt-2">
-                  <div className="text-center p-2 bg-slate-50 rounded border">
-                    <div className="text-xs text-slate-500">Total Dose</div>
-                    <div className="font-bold text-slate-800">{hypomagResult.totalDose.toFixed(0)} mg</div>
-                  </div>
-                  <div className="text-center p-2 bg-slate-50 rounded border">
-                    <div className="text-xs text-slate-500">Dilution Range</div>
-                    <div className="font-bold text-slate-800">{hypomagResult.minDilution}–{hypomagResult.maxDilution} mL</div>
-                  </div>
-                  <div className="text-center p-2 bg-slate-50 rounded border">
-                    <div className="text-xs text-slate-500">Duration</div>
-                    <div className="font-bold text-slate-800">{hypomagResult.infusionHours} hr</div>
-                  </div>
+                  {[
+                    { label: "Total Dose", val: `${hypomagResult.totalDose.toFixed(0)} mg` },
+                    { label: "Dilution Range", val: `${hypomagResult.minDilution}–${hypomagResult.maxDilution} mL` },
+                    { label: "Duration", val: `${hypomagResult.infusionHours} hr` },
+                  ].map(({ label, val }) => (
+                    <div key={label} className="text-center p-3 rounded-lg border" style={{ background: "var(--np-surface-sunken)", borderColor: "var(--np-border)" }}>
+                      <div style={{ fontSize: 11, color: "var(--np-fg-3)", marginBottom: 4 }}>{label}</div>
+                      <div style={{ fontFamily: "var(--np-font-mono)", fontWeight: 600, fontSize: 15, color: "var(--np-secondary)" }}>{val}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>
           )}
 
           {asthmaResult && (
-            <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-semibold text-blue-700 border-b border-blue-100 pb-2 mb-4">
+            <section className="np-card">
+              <h2 className="np-section-heading" style={{ color: "var(--np-info)", borderColor: "#BFDBFE" }}>
                 Order For Acute Asthma Exacerbation
               </h2>
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 font-mono text-sm">
-                <p className="text-slate-700">
+              <div className="rounded-lg border p-4" style={{ background: "var(--np-info-soft)", borderColor: "#BFDBFE", fontFamily: "var(--np-font-mono)", fontSize: 13 }}>
+                <p style={{ color: "var(--np-fg-1)" }}>
                   Give MgSO₄ <strong>{asthmaResult.totalDose.toFixed(0)} mg</strong> diluted in{" "}
                   <strong>{asthmaResult.minDilution} – {asthmaResult.maxDilution} mL</strong> of chosen fluid
                   (e.g. NS, D5W) IV infusion over 15–60 minutes under CPM.
                 </p>
               </div>
-              <div className="text-xs text-orange-600 font-medium mt-2">Maximum = 2000 mg/dose</div>
+              <div style={{ fontSize: 12, color: "var(--np-warning)", fontWeight: 500, marginTop: 8 }}>Maximum = 2000 mg/dose</div>
             </section>
           )}
         </div>
       )}
-
-      <Attribution />
-    </div>
+    </CalcShell>
   );
 }

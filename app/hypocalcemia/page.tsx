@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { calcHypocalcemia, type HypocalcemiaResult } from "@/lib/calculations";
-import Attribution from "@/components/Attribution";
+import CalcShell from "@/components/CalcShell";
 
 export default function HypocalcemiaPage() {
   const [weight, setWeight] = useState<string>("");
@@ -31,63 +30,58 @@ export default function HypocalcemiaPage() {
 
   function markDirty() { setDirty(true); }
 
-  const inputClass = "w-full rounded-md border border-slate-300 px-3 py-2 text-sm font-mono focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none";
-
   return (
-    <div className="max-w-4xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/" className="text-blue-600 hover:underline text-sm">← Home</Link>
-        <span className="text-slate-400">/</span>
-        <span className="text-sm text-slate-600">Hypocalcemia Correction</span>
-      </div>
-
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Hypocalcemia Correction</h1>
-      <p className="text-sm text-slate-500 mb-6">Fill in patient data then click Calculate to generate orders.</p>
-
+    <CalcShell
+      sigil="🦴"
+      title="Hypocalcemia Correction"
+      description="Fill in patient data then click Calculate to generate calcium orders."
+    >
       {/* Inputs */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6 shadow-sm space-y-4">
+      <div className="np-card mb-6 space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="col-span-2 sm:col-span-1">
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Weight (kg)</label>
+            <label className="np-label">Weight (kg)</label>
             <input type="number" min="0.1" step="0.1" value={weight} placeholder="e.g. 20"
-              onChange={e => { setWeight(e.target.value); markDirty(); }} className={inputClass} />
+              onChange={e => { setWeight(e.target.value); markDirty(); }} className="np-input" />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Ca Gluconate IV dose (mg/kg)</label>
+            <label className="np-label">Ca Gluconate IV dose (mg/kg)</label>
             <input type="number" min="50" max="200" step="1" value={glucDoseIV}
-              onChange={e => { setGlucDoseIV(e.target.value); markDirty(); }} className={inputClass} />
-            <div className="text-xs text-slate-400 mt-0.5">Neonates: 100–200 | Older: 50–125</div>
+              onChange={e => { setGlucDoseIV(e.target.value); markDirty(); }} className="np-input" />
+            <div style={{ fontSize: 11, color: "var(--np-fg-4)", marginTop: 3 }}>Neonates: 100–200 | Older: 50–125</div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Ca Chloride IV dose (mg/kg)</label>
+            <label className="np-label">Ca Chloride IV dose (mg/kg)</label>
             <input type="number" min="10" max="20" step="1" value={chlorDoseIV}
-              onChange={e => { setChlorDoseIV(e.target.value); markDirty(); }} className={inputClass} />
-            <div className="text-xs text-slate-400 mt-0.5">Range: 10–20 mg/kg</div>
+              onChange={e => { setChlorDoseIV(e.target.value); markDirty(); }} className="np-input" />
+            <div style={{ fontSize: 11, color: "var(--np-fg-4)", marginTop: 3 }}>Range: 10–20 mg/kg</div>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Elemental Ca oral dose (mg/kg)</label>
+            <label className="np-label">Elemental Ca oral dose (mg/kg)</label>
             <input type="number" min="8" max="19" step="1" value={elemCaDoseOral}
-              onChange={e => { setElemCaDoseOral(e.target.value); markDirty(); }} className={inputClass} />
-            <div className="text-xs text-slate-400 mt-0.5">Neonates: 13–19 | Older: 8–19</div>
+              onChange={e => { setElemCaDoseOral(e.target.value); markDirty(); }} className="np-input" />
+            <div style={{ fontSize: 11, color: "var(--np-fg-4)", marginTop: 3 }}>Neonates: 13–19 | Older: 8–19</div>
           </div>
         </div>
-        <div className="pt-2 border-t border-slate-100">
-          <div className="text-xs font-semibold text-slate-600 mb-3">Reference Values</div>
+        <div style={{ paddingTop: 8, borderTop: "1px solid var(--np-border)" }}>
+          <div style={{ fontFamily: "var(--np-font-body)", fontSize: 11, fontWeight: 700, color: "var(--np-fg-2)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+            Reference Values
+          </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Serum Ca (mmol/L)</label>
+              <label className="np-label">Serum Ca (mmol/L)</label>
               <input type="number" step="0.1" value={serumCa}
-                onChange={e => { setSerumCa(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setSerumCa(e.target.value); markDirty(); }} className="np-input" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Serum Albumin (g/L)</label>
+              <label className="np-label">Serum Albumin (g/L)</label>
               <input type="number" step="1" value={albumin}
-                onChange={e => { setAlbumin(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setAlbumin(e.target.value); markDirty(); }} className="np-input" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Serum Phosphate (mmol/L)</label>
+              <label className="np-label">Serum Phosphate (mmol/L)</label>
               <input type="number" step="0.1" value={serumPhosphate}
-                onChange={e => { setSerumPhosphate(e.target.value); markDirty(); }} className={inputClass} />
+                onChange={e => { setSerumPhosphate(e.target.value); markDirty(); }} className="np-input" />
             </div>
           </div>
         </div>
@@ -95,22 +89,18 @@ export default function HypocalcemiaPage() {
           <button
             onClick={handleCalculate}
             disabled={!weight || parseFloat(weight) <= 0}
-            className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-sm transition-colors"
+            className="np-btn np-btn-primary"
           >
             {result && !dirty ? "Recalculate" : "Calculate"}
           </button>
-          {result && dirty && (
-            <span className="text-xs text-amber-600 font-medium">⚠ Inputs changed — click Recalculate</span>
-          )}
-          {snap && !dirty && (
-            <span className="text-xs text-slate-500">Results for {snap.w} kg</span>
-          )}
+          {result && dirty && <span className="np-dirty-warn">⚠ Inputs changed — click Recalculate</span>}
+          {snap && !dirty && <span style={{ fontSize: 12, color: "var(--np-fg-3)" }}>Results for {snap.w} kg</span>}
         </div>
       </div>
 
       {!result && (
-        <div className="bg-slate-100 border border-slate-200 rounded-xl p-12 text-center text-slate-400">
-          Enter patient data above and click <strong className="text-slate-600">Calculate</strong> to see calcium orders.
+        <div className="np-empty">
+          Enter patient data above and click <strong>Calculate</strong> to see calcium orders.
         </div>
       )}
 
@@ -118,27 +108,29 @@ export default function HypocalcemiaPage() {
         <div className="space-y-5">
           {/* Reference panel */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <div className="text-xs font-semibold text-slate-600 mb-1">Corrected Calcium (for albumin)</div>
-              <div className="text-2xl font-bold text-slate-800">{result.correctedCa.toFixed(2)} mmol/L</div>
-              <div className="text-xs text-slate-500 mt-1">= ((40 − albumin) × 0.02) + Ca</div>
+            <div className="np-card-sm">
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--np-fg-3)", marginBottom: 4 }}>Corrected Calcium (for albumin)</div>
+              <div className="np-value">{result.correctedCa.toFixed(2)} <span style={{ fontSize: 13, fontFamily: "var(--np-font-body)", fontWeight: 500, color: "var(--np-fg-3)" }}>mmol/L</span></div>
+              <div style={{ fontSize: 11, fontFamily: "var(--np-font-mono)", color: "var(--np-fg-4)", marginTop: 4 }}>= ((40 − albumin) × 0.02) + Ca</div>
             </div>
-            <div className={`border rounded-lg p-4 ${result.crystallizationRatio > 4 ? "bg-red-50 border-red-200" : "bg-green-50 border-green-200"}`}>
-              <div className="text-xs font-semibold text-slate-600 mb-1">Crystallization Ratio (Ca × PO₄)</div>
-              <div className={`text-2xl font-bold ${result.crystallizationRatio > 4 ? "text-red-700" : "text-green-700"}`}>
+            <div className="np-card-sm" style={{
+              borderTop: `3px solid ${result.crystallizationRatio > 4 ? "var(--np-danger)" : "var(--np-success)"}`,
+            }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--np-fg-3)", marginBottom: 4 }}>Crystallization Ratio (Ca × PO₄)</div>
+              <div className="np-value" style={{ color: result.crystallizationRatio > 4 ? "var(--np-danger)" : "var(--np-success)" }}>
                 {result.crystallizationRatio.toFixed(2)}
               </div>
-              <div className="text-xs mt-1">
+              <div style={{ fontSize: 11, color: result.crystallizationRatio > 4 ? "var(--np-danger)" : "var(--np-success)", marginTop: 4 }}>
                 {result.crystallizationRatio > 4
-                  ? "⚠ >4: Give IV calcium over longer period to avoid crystallization"
+                  ? "⚠ >4: Give IV calcium over longer period"
                   : "✓ Safe ratio (<4)"}
               </div>
             </div>
           </div>
 
           {/* Symptomatic */}
-          <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-red-700 border-b border-red-100 pb-2 mb-4">
+          <section className="np-card">
+            <h2 className="np-section-heading" style={{ color: "var(--np-danger)", borderColor: "#FEE2E2" }}>
               Symptomatic Hypocalcemia (Convulsions, Laryngospasm, Carpopedal Spasm, Tetany)
             </h2>
             <div className="space-y-3">
@@ -159,73 +151,71 @@ export default function HypocalcemiaPage() {
                   note: "Max 10 mL/dose",
                 },
               ].map(({ title, order, note }) => (
-                <div key={title} className="bg-red-50 border border-red-100 rounded-lg p-4 text-sm">
-                  <div className="font-semibold mb-1">{title}</div>
-                  <p className="font-mono text-slate-700">{order}</p>
-                  {note && <div className="text-xs text-orange-600 mt-1">{note}</div>}
+                <div key={title} className="rounded-lg border p-4" style={{ background: "var(--np-danger-soft)", borderColor: "#FCA5A5" }}>
+                  <div style={{ fontWeight: 600, color: "var(--np-fg-1)", marginBottom: 6 }}>{title}</div>
+                  <p style={{ fontFamily: "var(--np-font-mono)", fontSize: 13, color: "var(--np-fg-1)" }}>{order}</p>
+                  {note && <div style={{ fontSize: 11, color: "var(--np-warning)", marginTop: 4 }}>{note}</div>}
                 </div>
               ))}
             </div>
           </section>
 
           {/* Asymptomatic unsafe */}
-          <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-yellow-700 border-b border-yellow-100 pb-2 mb-4">
+          <section className="np-card">
+            <h2 className="np-section-heading" style={{ color: "var(--np-warning)", borderColor: "#FEF3C7" }}>
               Asymptomatic — Unsafe (Ca &lt; 1.6 mmol/L) — IV Only
             </h2>
             <div className="space-y-3">
-              <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 text-sm">
-                <div className="font-semibold mb-1">
+              <div className="rounded-lg border p-4" style={{ background: "var(--np-warning-soft)", borderColor: "#FDE68A" }}>
+                <div style={{ fontWeight: 600, color: "var(--np-fg-1)", marginBottom: 4 }}>
                   Calcium Gluconate {snap.g} mg/kg IV
-                  <span className="text-xs font-normal text-orange-600 ml-2">(Max 2000 mg/dose)</span>
+                  <span style={{ fontSize: 11, fontWeight: 400, color: "var(--np-warning)", marginLeft: 8 }}>(Max 2000 mg/dose)</span>
                 </div>
-                <p className="font-mono text-slate-700">
+                <p style={{ fontFamily: "var(--np-font-mono)", fontSize: 13, color: "var(--np-fg-1)" }}>
                   Give Ca Gluconate IV <strong>{result.gluconateIV_mg.toFixed(0)} mg</strong> = {result.gluconateIV_elemCa.toFixed(0)} mg elemental Ca ={" "}
                   <strong>{result.gluconateIV_vol.toFixed(0)} mL</strong> diluted in{" "}
                   <strong>{result.gluconateIV_dilution.toFixed(0)} mL</strong> D5W or NS over 20–60 min under CPM.
                 </p>
-                <div className="text-xs text-slate-500 mt-1">May be repeated every 6 hours.</div>
+                <div style={{ fontSize: 11, color: "var(--np-fg-3)", marginTop: 4 }}>May be repeated every 6 hours.</div>
               </div>
-              <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 text-sm">
-                <div className="font-semibold mb-1">
+              <div className="rounded-lg border p-4" style={{ background: "var(--np-warning-soft)", borderColor: "#FDE68A" }}>
+                <div style={{ fontWeight: 600, color: "var(--np-fg-1)", marginBottom: 4 }}>
                   Calcium Chloride {snap.c} mg/kg IV
-                  <span className="text-xs font-normal text-orange-600 ml-2">(Max 1000 mg/dose)</span>
+                  <span style={{ fontSize: 11, fontWeight: 400, color: "var(--np-warning)", marginLeft: 8 }}>(Max 1000 mg/dose)</span>
                 </div>
-                <p className="font-mono text-slate-700">
+                <p style={{ fontFamily: "var(--np-font-mono)", fontSize: 13, color: "var(--np-fg-1)" }}>
                   Give Ca Chloride IV <strong>{result.chlorideIV_mg.toFixed(0)} mg</strong> = {result.chlorideIV_elemCa.toFixed(0)} mg elemental Ca ={" "}
                   <strong>{result.chlorideIV_vol.toFixed(0)} mL</strong> diluted in{" "}
                   <strong>{result.chlorideIV_dilution.toFixed(0)} mL</strong> NS over {result.chlorideIV_infusionMin}–60 min under CPM.
                 </p>
-                <div className="text-xs text-slate-500 mt-1">May be repeated every 4–6 hours.</div>
+                <div style={{ fontSize: 11, color: "var(--np-fg-3)", marginTop: 4 }}>May be repeated every 4–6 hours.</div>
               </div>
             </div>
           </section>
 
           {/* Asymptomatic safe */}
-          <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-green-700 border-b border-green-100 pb-2 mb-4">
+          <section className="np-card">
+            <h2 className="np-section-heading" style={{ color: "var(--np-success)", borderColor: "#BBF7D0" }}>
               Asymptomatic — Safe (Ca &gt; 1.6 mmol/L) — Oral Preferred
             </h2>
-            <div className="space-y-3 text-sm">
+            <div className="space-y-3">
               {[
                 { name: "Calcium Gluconate", dose: result.gluconateOral_mg, note: "Same IV preparation can be given orally" },
                 { name: "Calcium Carbonate", dose: result.carbonateOral_mg, note: "Administer with meals if using for phosphate-binding" },
                 { name: "Calcium Glubionate", dose: result.glubionateOral_mg, note: "" },
               ].map(({ name, dose, note }) => (
-                <div key={name} className="bg-green-50 border border-green-100 rounded-lg p-3">
-                  <p className="font-mono text-slate-700">
+                <div key={name} className="rounded-lg border p-3" style={{ background: "var(--np-success-soft)", borderColor: "#86EFAC" }}>
+                  <p style={{ fontFamily: "var(--np-font-mono)", fontSize: 13, color: "var(--np-fg-1)" }}>
                     <strong>{name}</strong> — {dose} mg as{" "}
                     <strong>{snap.o} mg/kg = {(snap.o * snap.w).toFixed(0)} mg elemental Ca</strong> PO every 6 hours
                   </p>
-                  {note && <div className="text-xs text-slate-500 mt-1">({note})</div>}
+                  {note && <div style={{ fontSize: 11, color: "var(--np-fg-3)", marginTop: 4 }}>({note})</div>}
                 </div>
               ))}
             </div>
           </section>
         </div>
       )}
-
-      <Attribution />
-    </div>
+    </CalcShell>
   );
 }

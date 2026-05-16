@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { calcHyperkalemia, type HyperkalemiaResult } from "@/lib/calculations";
-import Attribution from "@/components/Attribution";
+import CalcShell from "@/components/CalcShell";
 
 export default function HyperkalemiaPage() {
   const [weight, setWeight] = useState<string>("");
@@ -30,56 +29,54 @@ export default function HyperkalemiaPage() {
     : null;
 
   const OrderCard = ({ title, order, note }: { title: string; order: string; note?: string }) => (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-      <div className="font-semibold text-slate-700 mb-3">{title}</div>
-      <div className="bg-rose-50 border border-rose-100 rounded-lg p-4 font-mono text-sm text-slate-700">{order}</div>
-      {note && <div className="text-xs text-orange-600 mt-2">{note}</div>}
+    <div className="np-card">
+      <div style={{ fontWeight: 600, color: "var(--np-secondary)", fontFamily: "var(--np-font-display)", marginBottom: 10 }}>{title}</div>
+      <div className="rounded-lg p-3 border" style={{ background: "var(--np-danger-soft)", borderColor: "#FCA5A5", fontFamily: "var(--np-font-mono)", fontSize: 13, color: "var(--np-fg-1)" }}>
+        {order}
+      </div>
+      {note && <div style={{ fontSize: 11, color: "var(--np-warning)", marginTop: 6 }}>{note}</div>}
     </div>
   );
 
   return (
-    <div className="max-w-3xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Link href="/" className="text-blue-600 hover:underline text-sm">← Home</Link>
-        <span className="text-slate-400">/</span>
-        <span className="text-sm text-slate-600">Hyperkalemia Management</span>
+    <CalcShell
+      sigil="📊"
+      title="Hyperkalemia Management"
+      description="Weight-based dosing for acute hyperkalemia management. This is only a dose calculator — refer to protocol for full clinical guidance."
+    >
+      <div className="np-banner np-banner-warn mb-4">
+        <span>This is only a dose calculator. Refer to the hyperkalemia management protocol for full clinical guidance.</span>
       </div>
 
-      <h1 className="text-2xl font-bold text-slate-900 mb-1">Hyperkalemia Management</h1>
-      <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
-        This is only a dose calculator. Refer to the hyperkalemia management protocol for full clinical guidance.
-      </div>
-
-      <div className="bg-white border border-slate-200 rounded-xl p-5 mb-6 shadow-sm">
-        <label className="block text-sm font-semibold text-slate-700 mb-2">Patient Weight (kg)</label>
+      <div className="np-card mb-6">
+        <label className="np-label">Patient Weight (kg)</label>
         <div className="flex items-center gap-3">
           <input
             type="number" min="0.5" max="200" step="0.1"
-            value={weight}
-            placeholder="e.g. 23"
+            value={weight} placeholder="e.g. 23"
             onChange={(e) => { setWeight(e.target.value); setDirty(true); }}
             onKeyDown={(e) => e.key === "Enter" && handleCalculate()}
-            className="w-48 rounded-md border border-slate-300 px-3 py-2 text-base font-mono shadow-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-200 outline-none"
+            className="np-input" style={{ maxWidth: 180 }}
           />
           <button
             onClick={handleCalculate}
             disabled={!weight || parseFloat(weight) <= 0}
-            className="px-6 py-2 bg-rose-600 hover:bg-rose-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-sm transition-colors"
+            className="np-btn np-btn-primary"
           >
             {result && !dirty ? "Recalculate" : "Calculate"}
           </button>
-          {result && dirty && (
-            <span className="text-xs text-amber-600 font-medium">⚠ Weight changed — click Recalculate</span>
-          )}
+          {result && dirty && <span className="np-dirty-warn">⚠ Weight changed — click Recalculate</span>}
         </div>
         {calculatedWeight && !dirty && (
-          <div className="mt-2 text-xs text-slate-500">Showing results for weight: <strong>{calculatedWeight} kg</strong></div>
+          <div style={{ marginTop: 8, fontSize: 12, color: "var(--np-fg-3)" }}>
+            Showing results for weight: <strong>{calculatedWeight} kg</strong>
+          </div>
         )}
       </div>
 
       {!result && (
-        <div className="bg-slate-100 border border-slate-200 rounded-xl p-12 text-center text-slate-400">
-          Enter patient weight above and click <strong className="text-slate-600">Calculate</strong> to see medication orders.
+        <div className="np-empty">
+          Enter patient weight above and click <strong>Calculate</strong> to see medication orders.
         </div>
       )}
 
@@ -95,14 +92,14 @@ export default function HyperkalemiaPage() {
             order={`NaHCO₃ ${result.nahco3_min.toFixed(0)} to ${result.nahco3_max.toFixed(0)} mEq mixed with 1:1 mL of D5W IV over 5–10 minutes.`}
             note={`Maximum per dose = ${result.nahco3_max.toFixed(0)} mEq`}
           />
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-            <div className="font-semibold text-slate-700 mb-3">Ventolin (Salbutamol)</div>
+          <div className="np-card">
+            <div style={{ fontWeight: 600, color: "var(--np-secondary)", fontFamily: "var(--np-font-display)", marginBottom: 10 }}>Ventolin (Salbutamol)</div>
             {ventolin && (
-              <div className="bg-rose-50 border border-rose-100 rounded-lg p-4 font-mono text-sm text-slate-700">
-                <span className="font-semibold">{ventolin.label}:</span> Ventolin {ventolin.dose} may be repeated {ventolin.freq}
+              <div className="rounded-lg p-3 border" style={{ background: "var(--np-danger-soft)", borderColor: "#FCA5A5", fontFamily: "var(--np-font-mono)", fontSize: 13, color: "var(--np-fg-1)" }}>
+                <span style={{ fontWeight: 600 }}>{ventolin.label}:</span> Ventolin {ventolin.dose} may be repeated {ventolin.freq}
               </div>
             )}
-            <div className="mt-2 text-xs text-slate-500 grid grid-cols-2 gap-1">
+            <div className="mt-2 grid grid-cols-2 gap-1" style={{ fontSize: 12, color: "var(--np-fg-3)" }}>
               <div>Neonates: 0.25–0.5 mL + 3 mL NS</div>
               <div>&lt;25 kg: 0.5 mL + 3 mL NS</div>
               <div>25–50 kg: 1 mL + 3 mL NS</div>
@@ -130,8 +127,6 @@ export default function HyperkalemiaPage() {
           />
         </div>
       )}
-
-      <Attribution />
-    </div>
+    </CalcShell>
   );
 }

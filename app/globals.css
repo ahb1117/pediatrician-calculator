@@ -1,12 +1,255 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* ── Brand ──────────────────────────────────────────── */
+  --np-primary:        #3E8A95;
+  --np-primary-hover:  #2F6F79;
+  --np-primary-press:  #245862;
+  --np-primary-soft:   #D9ECEE;
+
+  --np-secondary:      #21335E;
+  --np-secondary-hover:#182547;
+
+  --np-tertiary:       #7CB3B9;
+  --np-tertiary-soft:  #E6F1F2;
+
+  /* ── Canvas / Surface ───────────────────────────────── */
+  --np-canvas:         #E8EEF8;
+  --np-surface:        #FFFFFF;
+  --np-surface-sunken: #F4F7FB;
+
+  /* ── Semantic ────────────────────────────────────────── */
+  --np-danger:         #DC2626;
+  --np-danger-soft:    #FEE2E2;
+  --np-warning:        #B45309;
+  --np-warning-soft:   #FEF3C7;
+  --np-success:        #15803D;
+  --np-success-soft:   #DCFCE7;
+  --np-info:           #2563EB;
+  --np-info-soft:      #DBEAFE;
+
+  /* ── Foreground ──────────────────────────────────────── */
+  --np-fg-1: #334155;
+  --np-fg-2: #475569;
+  --np-fg-3: #64748B;
+  --np-fg-4: #94A3B8;
+
+  /* ── Border ──────────────────────────────────────────── */
+  --np-border:         #E2E8F0;
+  --np-border-strong:  #CBD5E1;
+  --np-border-focus:   #3E8A95;
+
+  /* ── Fonts (populated by next/font in layout.tsx) ─────── */
+  --np-font-display: var(--font-montserrat, 'Montserrat', system-ui, sans-serif);
+  --np-font-body:    var(--font-inter, 'Inter', system-ui, sans-serif);
+  --np-font-mono:    var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+
+  /* ── Shadows ─────────────────────────────────────────── */
+  --np-shadow-xs:    0 1px 2px rgba(33,51,94,0.05);
+  --np-shadow-sm:    0 2px 6px rgba(33,51,94,0.06), 0 1px 2px rgba(33,51,94,0.04);
+  --np-shadow-md:    0 6px 16px rgba(33,51,94,0.08), 0 2px 4px rgba(33,51,94,0.04);
+  --np-shadow-lg:    0 16px 32px rgba(33,51,94,0.10), 0 4px 8px rgba(33,51,94,0.04);
+  --np-shadow-focus: 0 0 0 3px rgba(62,138,149,0.25);
+
+  /* ── Motion ──────────────────────────────────────────── */
+  --np-ease:     cubic-bezier(0.2, 0.7, 0.2, 1);
+  --np-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --np-dur-fast: 120ms;
+  --np-dur-base: 200ms;
 }
 
+/* ── Base ────────────────────────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--np-canvas);
+  color: var(--np-fg-1);
+  font-family: var(--np-font-body);
+}
+
+/* ── Input ───────────────────────────────────────────── */
+.np-input {
+  width: 100%;
+  border: 1px solid var(--np-border-strong);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 14px;
+  font-family: var(--np-font-mono);
+  font-variant-numeric: tabular-nums;
+  color: #1E293B;
+  background: var(--np-surface);
+  outline: none;
+  transition: border-color var(--np-dur-fast) var(--np-ease),
+              box-shadow var(--np-dur-fast) var(--np-ease);
+  appearance: none;
+  -webkit-appearance: none;
+}
+.np-input:focus {
+  border-color: var(--np-border-focus);
+  box-shadow: var(--np-shadow-focus);
+}
+.np-input::placeholder {
+  color: var(--np-fg-4);
+}
+
+/* ── Button ──────────────────────────────────────────── */
+.np-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: var(--np-font-body);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: background var(--np-dur-fast) var(--np-ease),
+              transform 80ms var(--np-ease),
+              box-shadow var(--np-dur-fast) var(--np-ease);
+}
+.np-btn:active {
+  transform: scale(0.99);
+}
+.np-btn:disabled {
+  background: #CBD5E1 !important;
+  color: #94A3B8 !important;
+  cursor: not-allowed;
+  transform: none;
+}
+.np-btn-primary {
+  background: var(--np-primary);
+  color: #fff;
+}
+.np-btn-primary:hover:not(:disabled) {
+  background: var(--np-primary-hover);
+}
+.np-btn-primary:active:not(:disabled) {
+  background: var(--np-primary-press);
+}
+
+/* ── Card ────────────────────────────────────────────── */
+.np-card {
+  background: var(--np-surface);
+  border-radius: 14px;
+  padding: 24px 28px;
+  box-shadow: var(--np-shadow-sm);
+}
+.np-card-sm {
+  background: var(--np-surface);
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: var(--np-shadow-sm);
+}
+
+/* ── Section heading ─────────────────────────────────── */
+.np-section-heading {
+  font-family: var(--np-font-display);
+  font-weight: 600;
+  font-size: 15px;
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+/* ── Order readout ────────────────────────────────────── */
+.np-order-readout {
+  background: var(--np-surface);
+  border-radius: 14px;
+  padding: 22px 26px;
+  box-shadow: var(--np-shadow-md);
+  border-top: 3px solid var(--np-primary);
+}
+
+/* ── Disclaimer / Banner ─────────────────────────────── */
+.np-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border-left-width: 3px;
+  border-left-style: solid;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--np-font-body);
+}
+.np-banner-warn {
+  background: var(--np-warning-soft);
+  color: #78350F;
+  border-left-color: var(--np-warning);
+}
+.np-banner-danger {
+  background: var(--np-danger-soft);
+  color: #7F1D1D;
+  border-left-color: var(--np-danger);
+}
+.np-banner-info {
+  background: var(--np-info-soft);
+  color: #1E3A8A;
+  border-left-color: var(--np-info);
+}
+
+/* ── Mono value readout ──────────────────────────────── */
+.np-value {
+  font-family: var(--np-font-mono);
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--np-secondary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+/* ── Empty state ─────────────────────────────────────── */
+.np-empty {
+  background: var(--np-surface-sunken);
+  border: 1px dashed var(--np-border-strong);
+  border-radius: 14px;
+  padding: 48px 32px;
+  text-align: center;
+  color: var(--np-fg-4);
+  font-family: var(--np-font-body);
+}
+
+/* ── Label ───────────────────────────────────────────── */
+.np-label {
+  display: block;
+  font-family: var(--np-font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--np-fg-2);
+  margin-bottom: 5px;
+}
+
+/* ── Dirty warning ───────────────────────────────────── */
+.np-dirty-warn {
+  font-family: var(--np-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--np-warning);
+}
+
+/* ── Table ───────────────────────────────────────────── */
+.np-table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+.np-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--np-fg-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  background: var(--np-surface-sunken);
+}
+.np-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--np-border);
+  color: var(--np-fg-1);
+}
+.np-table tr:last-child td {
+  border-bottom: none;
 }
