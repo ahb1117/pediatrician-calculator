@@ -39,13 +39,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           WebkitBackdropFilter: "blur(10px)",
           borderBottom: "1px solid var(--np-border)",
         }}>
-          <div style={{
-            maxWidth: 1100, margin: "0 auto",
-            padding: "14px 24px",
-            display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16,
-          }}>
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 14, textDecoration: "none" }}>
-              <Image src="/logo.png" alt="NeoPeds logo" width={160} height={48} style={{ height: 48, width: "auto", objectFit: "contain" }} priority unoptimized />
+          <div className="np-header-inner">
+            <Link href="/" className="np-header-logo">
+              <Image src="/logo.png" alt="NeoPeds logo" width={160} height={48} className="np-header-logo-img" style={{ width: "auto" }} priority unoptimized />
               <span style={{
                 width: 1, alignSelf: "stretch", background: "var(--np-border)",
                 flexShrink: 0, margin: "2px 0",
@@ -67,12 +63,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </Link>
 
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              padding: "6px 12px", borderRadius: 999,
+            <div className="np-header-badge" style={{
               background: "var(--np-danger-soft)", color: "#B91C1C",
-              fontFamily: "var(--np-font-body)", fontSize: 12, fontWeight: 600,
-              whiteSpace: "nowrap",
+              fontFamily: "var(--np-font-body)",
             }}>
               <span style={{
                 width: 6, height: 6, borderRadius: 999,
@@ -85,12 +78,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
 
         {/* ── Main ─────────────────────────────────────── */}
-        <main style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 24px" }}>
+        <main className="np-page-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "24px 24px" }}>
           {children}
         </main>
 
         {/* ── Footer ───────────────────────────────────── */}
-        <footer style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 56px" }}>
+        <footer className="np-page-footer" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px 56px" }}>
           <div style={{
             paddingTop: 32,
             borderTop: "1px solid var(--np-border)",
@@ -116,8 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             {/* Attribution card */}
-            <div style={{
-              display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 32,
+            <div className="np-attribution-grid" style={{
               padding: "20px 24px",
               background: "var(--np-surface)", borderRadius: 14,
               boxShadow: "var(--np-shadow-xs)",

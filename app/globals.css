@@ -40,8 +40,8 @@
   --np-border-focus:   #3E8A95;
 
   /* ── Fonts (populated by next/font in layout.tsx) ─────── */
-  --np-font-display: var(--font-montserrat, 'Montserrat', system-ui, sans-serif);
-  --np-font-body:    var(--font-inter, 'Inter', system-ui, sans-serif);
+  --np-font-display: var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
+  --np-font-body:    var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
   --np-font-mono:    var(--font-mono, 'JetBrains Mono', ui-monospace, monospace);
 
   /* ── Shadows ─────────────────────────────────────────── */
@@ -227,6 +227,86 @@ body {
   font-size: 12px;
   font-weight: 500;
   color: var(--np-warning);
+}
+
+/* ── Responsive Header ───────────────────────────────── */
+.np-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.np-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.np-header-logo-img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+}
+
+.np-header-badge {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .np-header-inner {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+  .np-header-logo {
+    gap: 8px;
+  }
+  .np-header-logo-img {
+    height: 30px;
+  }
+  .np-header-badge {
+    font-size: 11px;
+    width: 100%;
+    justify-content: center;
+    padding: 5px 10px;
+  }
+}
+
+/* ── Responsive main padding ─────────────────────────── */
+@media (max-width: 520px) {
+  .np-page-main {
+    padding: 16px 14px;
+  }
+  .np-page-footer {
+    padding: 0 14px 40px;
+  }
+}
+
+/* ── Attribution grid ────────────────────────────────── */
+.np-attribution-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 520px) {
+  .np-attribution-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 /* ── Table ───────────────────────────────────────────── */

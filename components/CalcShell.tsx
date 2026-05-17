@@ -46,7 +46,8 @@ export default function CalcShell({ sigil, title, description, children }: Props
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <h1 style={{
             margin: 0,
-            fontFamily: "var(--np-font-display)", fontWeight: 700, fontSize: 32,
+            fontFamily: "var(--np-font-display)", fontWeight: 700,
+            fontSize: "clamp(22px, 5vw, 32px)",
             color: "var(--np-secondary)", letterSpacing: "-0.02em", lineHeight: 1.15,
           }}>
             {title}
